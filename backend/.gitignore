@@ -1,0 +1,30 @@
+# Node.js
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+
+# Build output
+/dist
+/build
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editor folders/files (e.g., VSCode, Sublime, etc.)
+.vscode/
+.idea/
+
+# Optional: test coverage directory
+/coverage
+
+# Package-lock.json or yarn.lock should only be ignored if you're using yarn or npm
+# lock files but not both. Otherwise, delete the following line:
+package-lock.json
+yarn.lock

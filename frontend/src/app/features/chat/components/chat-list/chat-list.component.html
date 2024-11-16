@@ -1,0 +1,6 @@
+<div class="max-w-md mx-auto">
+  <div *ngFor="let message of messages$ | async; index as i;">
+    <app-message [message]="message" [no]="i"></app-message>
+  </div>
+  <app-create-message></app-create-message>
+</div>
