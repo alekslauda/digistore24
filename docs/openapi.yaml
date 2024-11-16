@@ -3,28 +3,34 @@ info:
   title: Chat Messenger API
   version: 1.0.0
 paths:
-  /messages:
+  /api/messages:
     get:
       summary: Get all messages
+      operationId: getMessages
       responses:
         '200':
           description: A list of messages
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    message:
-                      type: string
-                    user:
-                      type: string
-                    timestamp:
-                      type: string
-  /message:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        creator:
+                          type: string
+                          description: User ID of the creator
+                        timestamp:
+                          type: string
+                          format: date-time
     post:
       summary: Send a new message
+      operationId: createMessage
       requestBody:
         required: true
         content:
@@ -34,10 +40,165 @@ paths:
               properties:
                 message:
                   type: string
-                user:
+                creator:
                   type: string
+                  description: User ID of the creator
       responses:
         '200':
           description: Message sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  creator:
+                    type: string
+                  timestamp:
+                    type: string
+                    format: date-time
         '400':
           description: Bad request, invalid input
+        '422':
+          description: Unprocessable entity
+        '404':
+          description: Entity not found
+  /api/messages/user/{uid}:
+    get:
+      summary: Get all messages for a concrete user
+      operationId: getMessagesByUser
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of messages for the user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        creator:
+                          type: string
+                        timestamp:
+                          type: string
+                          format: date-time
+        '404':
+          description: User not found or no messages for this user
+  /api/users:
+    get:
+      summary: Get all users
+      operationId: getUsers
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        username:
+                          type: string
+                        messages:
+                          type: array
+                          items:
+                            type: string
+                        timestamp:
+                          type: string
+                          format: date-time
+  /api/users/register:
+    post:
+      summary: Register a new user
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  minLength: 3
+                password:
+                  type: string
+                  minLength: 6
+      responses:
+        '200':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  messages:
+                    type: array
+                    items:
+                      type: string
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          description: Invalid data input
+        '422':
+          description: Unprocessable entity
+  /api/users/login:
+    post:
+      summary: Login user
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      username:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+                      timestamp:
+                        type: string
+                        format: date-time
+        '400':
+          description: Invalid credentials
+        '422':
+          description: Unprocessable entity
